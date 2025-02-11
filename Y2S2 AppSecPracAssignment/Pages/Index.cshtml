@@ -1,0 +1,39 @@
+﻿@page
+@model Y2S2_AppSecPracAssignment.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <div>
+        @if (Model.CurrentMember != null)
+        {
+            <p><strong>First Name:</strong> @Model.CurrentMember.FirstName</p>
+            <p><strong>Last Name:</strong> @Model.CurrentMember.LastName</p>
+            <p><strong>Gender:</strong> @Model.CurrentMember.Gender</p>
+            <p><strong>NRIC:</strong> @Model.CurrentMember.NRIC</p>
+            <p><strong>Email:</strong> @Model.CurrentMember.Email</p>
+            <p><strong>Date of Birth:</strong> @Model.CurrentMember.DateOfBirth.ToString("yyyy-MM-dd")</p>
+            <p><strong>Who Am I:</strong> @Model.CurrentMember.WhoAmI</p>
+            <p><strong>Resume Filename:</strong> @(Model.CurrentMember.Resume != null && Model.CurrentMember.Resume.Length > 0 ? "Resume uploaded" : "No resume uploaded")</p>
+            <p><strong>Verified:</strong> @Model.CurrentMember.IsVerified</p>
+
+            @if (!Model.CurrentMember.IsVerified)
+            {
+                <p><a href="@Url.Page("/EmailVerification")" class="btn btn-secondary">Verify Email</a></p>
+            }
+
+            <p><a href="@Url.Page("/ChangePassword")" class="btn btn-secondary">Change Password</a></p>
+
+            <form method="post" asp-page-handler="Logout">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        }
+        else
+        {
+            <p>You are not logged in.</p>
+        }
+    </div>
+</div>

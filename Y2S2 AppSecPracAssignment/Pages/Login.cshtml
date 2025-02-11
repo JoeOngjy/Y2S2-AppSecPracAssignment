@@ -1,0 +1,73 @@
+﻿@page
+@model Y2S2_AppSecPracAssignment.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<form method="post">
+    @Html.AntiForgeryToken() <!-- Add this line -->
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="LoginViewModel.Email" asp-for="LoginViewModel.Email" required />
+    </div>
+
+   
+    <div class="form-group">
+        <label asp-for="LoginViewModel.Password" class="control-label"></label>
+        <div class="input-group">
+            <input asp-for="LoginViewModel.Password" type="password" class="form-control" id="password" />
+            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password', 'togglePasswordIcon')">
+                <img id="togglePasswordIcon" src="/images/hide.png" width="20px" />
+            </button>
+        </div>
+        <span asp-validation-for="LoginViewModel.Password" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" id="recaptcha-token" name="LoginViewModel.RecaptchaToken" />
+    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='@Url.Page("/Register")'">Go to Register</button>
+    <button type="button" class="btn btn-link" onclick="window.location.href='@Url.Page("/ResetPasswordRequest")'">Forgot Password?</button>
+
+</form>
+
+@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+{
+    <div class="alert alert-danger mt-3">
+        <strong>Error!</strong> @Html.Raw(error.ErrorMessage) <!-- Ensure to use Html.Raw only for trusted content -->
+    </div>
+}
+
+<script src="https://www.google.com/recaptcha/api.js?render=6Lf93c0qAAAAANCiAFzTrvhfjPF4xdlF16OPLxp7"></script>
+<script>
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6Lf93c0qAAAAANCiAFzTrvhfjPF4xdlF16OPLxp7', { action: 'login' }).then(function (token) {
+            document.getElementById('recaptcha-token').value = token;
+        });
+    });
+
+    function togglePassword(inputId, iconId) {
+        const inputField = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (inputField.type === "password") {
+            inputField.type = "text";
+            icon.src = "/images/show.png";
+        } else {
+            inputField.type = "password";
+            icon.src = "/images/hide.png";
+        }
+    }
+
+    window.addEventListener('load', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Check for sessionexpired=true in the URL parameters
+        if (urlParams.has('sessionexpired') && urlParams.get('sessionexpired') === 'true') {
+            alert('Session expired or not found. Please log in again.');
+        }
+    });
+
+    
+</script>

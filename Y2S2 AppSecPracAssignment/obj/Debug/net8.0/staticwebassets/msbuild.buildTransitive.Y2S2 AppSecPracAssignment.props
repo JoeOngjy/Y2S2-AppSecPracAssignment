@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Y2S2 AppSecPracAssignment.props" />
+</Project>
